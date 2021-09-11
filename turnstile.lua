@@ -13,6 +13,7 @@ tabutil=require("tabutil")
 include("turnstile/lib/utils")
 local Rings=include("turnstile/lib/Rings")
 local shift=false
+local is_playing
 
 function init()
   global_time_start=current_time()
@@ -41,9 +42,26 @@ function updater()
   redraw()
 end
 
+function toggle_playing()
+  if is_playing then
+    for i,r in ipairs(ringset) do
+      r:stop()
+    end
+  else
+    global_time_start=current_time()
+    for i,r in ipairs(ringset) do
+      r:start()
+    end
+  end
+  is_playing = not is_playing
+end
+
 function key(k,z)
   if k==1 then
     shift=z==1
+  end
+  if z==0 then
+    do return end
   end
   if shift then
     if k==1 then
@@ -54,9 +72,7 @@ function key(k,z)
     if k==1 then
     elseif k==2 then
     elseif k==3 then
-      for i,r in ipairs(ringset) do
-        r:start()
-      end
+      toggle_playing()
     end
   end
 end
