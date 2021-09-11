@@ -34,3 +34,9 @@ now into what the class needs to do. I will make the class stateful - that is yo
 
 I actually ended up [adding three functions](https://github.com/schollz/turnstile/blob/6c6c5620628ed80deedb9a95b8dc531c81ec99a9/lib/Rings.lua#L22-L51), one to check if a note exists, one to add it, and one to remove it. I'm not sure about the data structures (using the fractional radians as placement) but lets go with it. there are alternative datastructures (say a matrix with rows = number of rings and columns = number of places for notes), but I like a flat structure better (a list of the data).
 
+time for lunch.
+
+## lets see it in action
+
+my goal right now is to right as little code as possible to get some visualization on the norns. I want to see if my math is right with the period calculations. if its all wrong, then maybe I need to change all the datastructures to better represent something that is right.
+
