@@ -55,6 +55,23 @@ function Rings:update(fn)
   end
 end
 
+function Rings:draw()
+  screen.level(15)
+  -- draw the rings
+  for i=1,3 do
+    screen.circle(64,32,self.radii[i])
+    screen.stroke()
+  end
+  -- draw the notes around each ring
+  for i,o in ipairs(self.orbit) do
+    -- translate to the center of the screen
+    local x=o.x+64
+    local y=o.y+32
+    screen.circle(x,y,2)
+    screen.fill()
+  end
+end
+
 -- set_period will set the period and calculate the new lcm
 function Rings:set_period(i,x)
   self.periods[i]=x
@@ -68,7 +85,7 @@ end
 function Rings:note_add(id_ring,period_fraction,note)
   -- make sure the period fraction is [0,2pi]
   period_fraction=math.fmod(period_fraction,2*3.14159265)
-  
+
   -- if note exists do nothing
   if self:note_exists(id_ring,period_fraction,note)==nil then
     do return end

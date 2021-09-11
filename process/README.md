@@ -58,7 +58,7 @@ include("turnstile/lib/utils.lua")
 
 all the functions in `utils.lua` are "global" so that by including them every single piece of code will have access to them.
 
-## Rings think in time, not beats
+## rings think in time, not beats
 
 everything is going to be time based, so that you can have very irregular times. in order to do this, I need to give all the rings a notion of time. I added a `time_start` to keep track of when it is started. this will be updated when starting. so I also added the `:start()` and `:stop()` functions. getting the current time on norns is easy and precise:
 
@@ -68,4 +68,24 @@ function current_time()
 end
 ```
 
-I added this to the `utils.lua`. then I added in a function to update the current positions based on time. to get things to make sound, I added a callback so that when a note crosses over the top threshold of the loop (< 0 to >=0 in math terms for the x-position) then it will call that function with the note value. I also added a function to set the period, because whenver the period is set it needs to recalculate the lcm.
+I added this to the `utils.lua`. then I added in a function to update the current positions based on time. to get things to make sound, I added a callback so that when a note crosses over the top threshold of the loop (< 0 to >=0 in math terms for the x-position) then it will call that function with the note value. I also added a function to set the period, because whenver the period is set it needs to recalculate the lcm. about [40 new lines added](https://github.com/schollz/turnstile/blob/690620fbefbc62a0cdf6f105a6bbe39b80dd1eb5/lib/Rings.lua#L26-L62).
+
+## lets visualize
+
+this is my favorite part. I'm going to attempt to visualize the basic routine. I'm creating a basic set of rings in the `init()` function:
+
+```lua
+-- create a list of all the known ring sets
+ringset={}
+table.insert(ringset,Rings:new())
+-- add a C-major chord
+ringset[1]:note_add(1,0,36)
+ringset[1]:note_add(2,0,40)
+ringset[1]:note_add(3,0,43)
+```
+
+this set of rings gets updated in the draw-routine which updates at 15 fps. that should be totally fine cpu-wise. I also added a draw routine in the Rings class so that they draw themselves with one line of code (`ringset[1]:draw()`). that's nice so I don't have to write so many for loops.
+
+**this will be the first time I'm running the program on norns now.** if it all works I will see some rings! but its 95% chance its not going to work and there will be bugs. there are always bugs. so here we go on the first bug excursions.
+
+### bug excursion 1 - first time running on norns

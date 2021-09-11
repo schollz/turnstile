@@ -15,16 +15,28 @@ local shift=false
 
 function init()
   global_time_start=current_time()
+  
+  -- create a list of all the known ring sets
+  ringset={}
+  table.insert(ringset,Rings:new())
+  -- add a C-major chord
+  ringset[1]:note_add(1,0,36)
+  ringset[1]:note_add(2,0,40)
+  ringset[1]:note_add(3,0,43)
 
   -- initialize metro for updating screen
   timer=metro.init()
   timer.time=1/15
   timer.count=-1
-  timer.event=update_screen
+  timer.event=updater
   timer:start()
 end
 
-function update_screen()
+function updater()
+  -- update each ring set
+  for i,r in ipairs(ringset) do
+    r:update()
+  end
   redraw()
 end
 
@@ -61,6 +73,9 @@ end
 
 function redraw()
   screen.clear()
+
+  -- draw the current ring set
+  ringset[1]:draw()
 
   screen.update()
 end
