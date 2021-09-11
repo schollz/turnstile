@@ -45,7 +45,7 @@ function Rings:update(fn)
     local j=o.id_ring
     local x_old=self.orbit[i].x
     self.orbit[i].x=self.radii[j] * math.sin(2*3.14159/self.periods[j]*time)
-    self.orbit[i].y=self.radii[j] * math.cos(2*3.14159/self.periods[j]*time)
+    self.orbit[i].y=self.radii[j] * -1 * math.cos(2*3.14159/self.periods[j]*time)
     if self.playing and fn~=nil then
       if x_old==nil or (x_old<=0 and self.orbit[i].x>=0) then
         -- crossed over the emitter
