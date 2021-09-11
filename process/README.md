@@ -32,4 +32,5 @@ local Class=include('<scriptname>/lib/Class').
 
 now into what the class needs to do. I will make the class stateful - that is you can give it a time, and it will tell you the positions of the notes on its rings. it will need a function to set positions of notes, and it will need a function to get all the notes based on some time. lets add a function to add notes first. 
 
-I actually ended up adding three functions, one to check if a note exists, one to add it, and one to remove it. I'm not sure about the data structures (using the fractional radians as placement) but lets go with it. there are alternative datastructures (say a matrix with rows = number of rings and columns = number of places for notes), but I like a flat structure better (a list of the data).
+I actually ended up [adding three functions](https://github.com/schollz/turnstile/blob/6c6c5620628ed80deedb9a95b8dc531c81ec99a9/lib/Rings.lua#L22-L51), one to check if a note exists, one to add it, and one to remove it. I'm not sure about the data structures (using the fractional radians as placement) but lets go with it. there are alternative datastructures (say a matrix with rows = number of rings and columns = number of places for notes), but I like a flat structure better (a list of the data).
+
