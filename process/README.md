@@ -34,9 +34,27 @@ now into what the class needs to do. I will make the class stateful - that is yo
 
 I actually ended up [adding three functions](https://github.com/schollz/turnstile/blob/6c6c5620628ed80deedb9a95b8dc531c81ec99a9/lib/Rings.lua#L22-L51), one to check if a note exists, one to add it, and one to remove it. I'm not sure about the data structures (using the fractional radians as placement) but lets go with it. there are alternative datastructures (say a matrix with rows = number of rings and columns = number of places for notes), but I like a flat structure better (a list of the data).
 
+my goal right now is to right as little code as possible to get some visualization on the norns. I want to see if my math is right with the period calculations. if its all wrong, then maybe I need to change all the datastructures to better represent something that is right.
+
 time for lunch.
 
-## lets see it in action
 
-my goal right now is to right as little code as possible to get some visualization on the norns. I want to see if my math is right with the period calculations. if its all wrong, then maybe I need to change all the datastructures to better represent something that is right.
+## least common multiples
+
+to get off the ground I will definetly need a function to computer the least common multiple (LCM). the algorithm is not too hard, but I just googled "lcm python" because every code snippet exists for Python and its very easy to read. [the first result](https://www.programiz.com/python-programming/examples/lcm) looks great, simple to convert to Lua. I converted it and then adjusted it so it will work with decimals. to work with decimals I just have to multiply the numbers out until they become integers and then divide by the same amount when I'm done. I then wrote the function to take any number of numbers. had to lookup how to [do multiple arguments in Lua](https://stackoverflow.com/questions/48273776/vararg-function-parameters-dont-work-with-arg-variable). the way to do it is like this, using a magic variable called `arg`:
+
+```lua
+function something(...)
+	local arg = {...}
+	-- each argument will now be arg[1], arg[2], etc.
+end
+```
+
+to integrate this into the codebase I just need to include it again with one line:
+
+```lua
+include("turnstile/lib/utils.lua")
+```
+
+all the functions in `utils.lua` are "global" so that by including them every single piece of code will have access to them.
 
