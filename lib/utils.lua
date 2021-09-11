@@ -40,3 +40,8 @@ function lcm(...)
     end
     return res
 end
+
+
+function current_time()
+    return clock.get_beat_sec()*clock.get_beats()
+end

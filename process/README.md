@@ -41,7 +41,7 @@ time for lunch.
 
 ## least common multiples
 
-to get off the ground I will definetly need a function to computer the least common multiple (LCM). the algorithm is not too hard, but I just googled "lcm python" because every code snippet exists for Python and its very easy to read. [the first result](https://www.programiz.com/python-programming/examples/lcm) looks great, simple to convert to Lua. I converted it and then adjusted it so it will work with decimals. to work with decimals I just have to multiply the numbers out until they become integers and then divide by the same amount when I'm done. I then wrote the function to take any number of numbers. had to lookup how to [do multiple arguments in Lua](https://stackoverflow.com/questions/48273776/vararg-function-parameters-dont-work-with-arg-variable). the way to do it is like this, using a magic variable called `arg`:
+to get off the ground I will definetly need a function to computer the least common multiple (LCM). the algorithm is not too hard, but I just googled "lcm python" because every code snippet exists for Python and its very easy to read. [the first result](https://www.programiz.com/python-programming/examples/lcm) looks great, simple to convert to Lua. I converted it and then adjusted it so it will work with decimals. to work with decimals I just have to multiply the numbers out until they become integers and then divide by the same amount when I'm done. I then [wrote the function](https://github.com/schollz/turnstile/blob/000bc7ce2e4aa4d7571281a7cb905e65b7db80dd/lib/utils.lua) to take any number of numbers. had to lookup how to [do multiple arguments in Lua](https://stackoverflow.com/questions/48273776/vararg-function-parameters-dont-work-with-arg-variable). the way to do it is like this, using a magic variable called `arg`:
 
 ```lua
 function something(...)
@@ -58,3 +58,14 @@ include("turnstile/lib/utils.lua")
 
 all the functions in `utils.lua` are "global" so that by including them every single piece of code will have access to them.
 
+## Rings think in time, not beats
+
+everything is going to be time based, so that you can have very irregular times. in order to do this, I need to give all the rings a notion of time. I added a `time_start` to keep track of when it is started. this will be updated when starting. so I also added the `:start()` and `:stop()` functions. getting the current time on norns is easy and precise:
+
+```lua
+function current_time()
+    return clock.get_beat_sec()*clock.get_beats()
+end
+```
+
+I added this to the `utils.lua`. then I added in a function to update the current positions based on time. to get things to make sound, I added a callback so that when a note crosses over the top threshold of the loop (< 0 to >=0 in math terms for the x-position) then it will call that function with the note value. I also added a function to set the period, because whenver the period is set it needs to recalculate the lcm.

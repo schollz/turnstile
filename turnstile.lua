@@ -9,10 +9,13 @@
 --
 -- ?
 
-local Rings=include('turnstile/lib/Rings')
+include("turnstile/lib/utils")
+local Rings=include("turnstile/lib/Rings")
 local shift=false
 
 function init()
+  global_time_start=current_time()
+
   -- initialize metro for updating screen
   timer=metro.init()
   timer.time=1/15
