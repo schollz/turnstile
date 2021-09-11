@@ -9,6 +9,7 @@
 --
 -- ?
 
+tabutil=require("tabutil")
 include("turnstile/lib/utils")
 local Rings=include("turnstile/lib/Rings")
 local shift=false
@@ -52,7 +53,10 @@ function key(k,z)
   else
     if k==1 then
     elseif k==2 then
-    else
+    elseif k==3 then
+      for i,r in ipairs(ringset) do
+        r:start()
+      end
     end
   end
 end
