@@ -87,7 +87,7 @@ function Rings:note_add(id_ring,period_fraction,note)
   period_fraction=math.fmod(period_fraction,2*3.14159265)
 
   -- if note exists do nothing
-  if self:note_exists(id_ring,period_fraction,note)==nil then
+  if self:note_exists(id_ring,period_fraction,note)~=nil then
     do return end
   end
 
