@@ -9,6 +9,7 @@
 --
 -- ?
 
+local Rings=include('turnstile/lib/Rings')
 local shift=false
 
 function init()

@@ -21,3 +21,5 @@ a class is simply a mold for an object. in this script I am thinking about havin
 
 here's more info on lua classes: https://www.lua.org/pil/16.1.html
 
+here's the skeleton code for a class. this one happens to be called "Rings": https://github.com/schollz/turnstile/blob/122c2805ca05d506b0115416dbdae6fb529c4dc5/lib/Rings.lua
+
