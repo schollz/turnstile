@@ -84,7 +84,7 @@ ringset[1]:note_add(2,0,40)
 ringset[1]:note_add(3,0,43)
 ```
 
-this set of rings gets updated in the draw-routine which updates at 15 fps. that should be totally fine cpu-wise. I also added a draw routine in the Rings class so that they draw themselves with one line of code (`ringset[1]:draw()`). that's nice so I don't have to write so many for loops.
+this set of rings gets updated in the draw-routine which updates at 15 fps. that should be totally fine cpu-wise. I [also added a draw routine](https://github.com/schollz/turnstile/commit/e8113b626054e110f40ade83bc9b3331dfbd1a92) in the Rings class so that they draw themselves with one line of code (`ringset[1]:draw()`). that's nice so I don't have to write so many for loops.
 
 **this will be the first time I'm running the program on norns now.** if it all works I will see some rings! but its 95% chance its not going to work and there will be bugs. there are always bugs. so here we go on the first bug excursions.
 
