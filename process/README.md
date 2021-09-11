@@ -23,3 +23,9 @@ here's more info on lua classes: https://www.lua.org/pil/16.1.html
 
 here's the skeleton code for a class. this one happens to be called "Rings": https://github.com/schollz/turnstile/blob/122c2805ca05d506b0115416dbdae6fb529c4dc5/lib/Rings.lua
 
+I put this into a "lib" directory and it can be accessed by the main script using a line to include it, like [here](https://github.com/schollz/turnstile/blob/f6446123ac0ed0bf661f5d7f68c73ca1bcbde15c/turnstile.lua#L12). in general it is:
+
+```lua
+-- will import "Class.lua"
+local Class=include('<scriptname>/lib/Class').
+```
