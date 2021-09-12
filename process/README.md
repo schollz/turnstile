@@ -211,3 +211,13 @@ I think what I wasn't liking was that there was too much going on. I decided to 
 https://user-images.githubusercontent.com/6550035/132969136-843510df-ce19-4cb0-b4bd-41276e6e8413.mp4
 
 and thats a good stopping point for day 1.
+
+# day 2 - ideas
+
+a global rate control. this might be fun to edit on the fly. global rate control should be *multiplied* by the inverse period (the rate), so it changes all the rings simultaneously. there probably needs to be a fade that allows it to fade between the new positions.
+
+random lfos for pan/volume. like oooooo, there could be an option to randomly translate the rings and have their x position correspond to pan and the y position correspond to volume.
+
+the callback needs to give more information. the callback should give a list of the notes and their rings. that way each ring could have its own instrument (useful for drums).
+
+note-per-second parameter. to prevent streams of notes, there can be a random filter that prevents notes from playing. this can be set as "notes-per-second" which raises/lowers the probability of emitting a note depending on how many notes were previously emitted.
