@@ -209,3 +209,5 @@ I think what I wasn't liking was that there was too much going on. I decided to 
 
 
 https://user-images.githubusercontent.com/6550035/132969137-3a7c43fd-0dfd-4a1d-8332-3c19abd7858a.mp4
+
+and thats a good stopping point for day 1.
