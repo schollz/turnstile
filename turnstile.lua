@@ -22,7 +22,7 @@ skeys=mxsamples:new()
 
 function init()
   global_time_start=current_time()
-  
+
   -- create a list of all the known ring sets
   ringset={}
   table.insert(ringset,Rings:new())
@@ -60,7 +60,7 @@ function updater()
   for i,r in ipairs(ringset) do
     r:update(function(note,is_chord)
       if not is_chord then
-        skeys:on({name="steinway model b",midi=note+24,velocity=math.random(40,120),sustain=0,decay=5,delay_send=0.05,amp=0.6})
+        skeys:on({name="epiano r3",midi=note+24,velocity=math.random(40,120),sustain=0,decay=5,delay_send=0.05,amp=0.6})
       else
         -- TODO: decay should be the total lcm plus a little
         skeys:on({name="string spurs swells",midi=note,velocity=70,attack=2,sustain=0,decay=8,amp=0.7,reverb_send=0.01})
@@ -81,7 +81,7 @@ function toggle_playing()
       r:start()
     end
   end
-  is_playing = not is_playing
+  is_playing=not is_playing
 end
 
 function key(k,z)

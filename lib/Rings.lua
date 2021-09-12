@@ -33,7 +33,7 @@ function Rings:stop()
   self.playing=false
 end
 
--- update will update all the x and y positions and 
+-- update will update all the x and y positions and
 -- if it crosses the upper side CW it will emit using a callback
 function Rings:update(fn)
   -- update x and y positions
@@ -47,10 +47,10 @@ function Rings:update(fn)
     local x_old=self.orbit[i].x
     local rate=(1/self.periods[j])
     local lcmrate=(1/self.period_lcm/4)
-    rate = rate - lcmrate
-    local period = 1/rate
-    self.orbit[i].x=self.radii[j] * math.sin(2*pi/period*time + o.period_fraction)
-    self.orbit[i].y=self.radii[j] * -1 * math.cos(2*pi/period*time + o.period_fraction)
+    rate=rate-lcmrate
+    local period=1/rate
+    self.orbit[i].x=self.radii[j]*math.sin(2*pi/period*time+o.period_fraction)
+    self.orbit[i].y=self.radii[j]*-1*math.cos(2*pi/period*time+o.period_fraction)
     if self.playing and fn~=nil then
       if x_old==nil or (x_old<=0 and self.orbit[i].x>=0) then
         -- crossed over the emitter
@@ -59,8 +59,8 @@ function Rings:update(fn)
     end
   end
   if (#notes_to_play==1 and math.random()<0.2) or #notes_to_play==4 then
-    for _, note in ipairs(notes_to_play) do
-        fn(note,#notes_to_play==self.num)
+    for _,note in ipairs(notes_to_play) do
+      fn(note,#notes_to_play==self.num)
     end
   end
 end
@@ -124,6 +124,5 @@ function Rings:note_exists(id_ring,period_fraction,note)
     end
   end
 end
-
 
 return Rings
