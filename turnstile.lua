@@ -15,6 +15,10 @@ local Rings=include("turnstile/lib/Rings")
 local shift=false
 local is_playing
 
+mxsamples=include("mx.samples/lib/mx.samples")
+engine.name="MxSamples"
+skeys=mxsamples:new()
+
 function init()
   global_time_start=current_time()
   
@@ -37,7 +41,9 @@ end
 function updater()
   -- update each ring set
   for i,r in ipairs(ringset) do
-    r:update()
+    r:update(function(note)
+      skeys:on({name="ghost piano",midi=note,velocity=120,sustain=0,decay=2})
+    end)
   end
   redraw()
 end
