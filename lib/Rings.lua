@@ -9,7 +9,23 @@ function Rings:new(o)
   -- define defaults if they are not defined
   o.num=o.num or 4
   o.radii=o.radii or {10,16,22,28}
-  o.periods=o.periods or {1.5,3,2,6}
+  o.periods=o.periods or {1.5*1,3*1,2*1,6*1}
+  o.pan={}
+  for i=1,o.num do
+    o.pan[i]={}
+    o.pan[i].period=math.random(4,60)
+    o.pan[i].offset=math.random(4,60)
+    o.pan[i].val=0
+    o.pan[i].active=false
+  end
+  o.amp={}
+  for i=1,o.num do
+    o.amp[i]={}
+    o.amp[i].period=math.random(4,60)
+    o.amp[i].offset=math.random(4,60)
+    o.amp[i].val=0.5
+    o.amp[i].active=false
+  end
   -- run some generic initialization
   -- (useful to breakout to restart)
   o:init()
@@ -41,6 +57,22 @@ function Rings:update(fn)
   if self.playing then
     time=current_time()-global_time_start
   end
+
+  -- update ring pan/volume
+  for i=1,self.num do
+    if self.pan[i].active then
+      self.pan[i].val=math.sin(2*pi/self.pan[i].period*time+self.pan[i].offset)/2
+    else
+      self.pan[i].val=0
+    end
+    if self.amp[i].active then
+      self.amp[i].val=0.25+(0.25*(1+math.sin(2*pi/self.pan[i].period*time+self.pan[i].offset)))
+    else
+      self.amp[i].val=0.5
+    end
+  end
+
+  -- update orbits
   local notes_to_play={}
   for i,o in ipairs(self.orbit) do
     local j=o.id_ring
@@ -52,33 +84,47 @@ function Rings:update(fn)
     self.orbit[i].x=self.radii[j]*math.sin(2*pi/period*time+o.period_fraction)
     self.orbit[i].y=self.radii[j]*-1*math.cos(2*pi/period*time+o.period_fraction)
     self.orbit[i].active=false
+    self.orbit[i].pan=self.pan[o.id_ring].val
+    self.orbit[i].amp=self.amp[o.id_ring].val
     if self.playing and fn~=nil then
       if x_old==nil or (x_old<=0 and self.orbit[i].x>=0) then
         -- crossed over the emitter
-        table.insert(notes_to_play,self.orbit[i].note)
+        table.insert(notes_to_play,self.orbit[i])
         self.orbit[i].active=true
       end
     end
   end
-  if (#notes_to_play==1 and math.random()<0.2) or #notes_to_play==4 then
-    for _,note in ipairs(notes_to_play) do
-      fn(note,#notes_to_play==self.num)
-    end
+  if #notes_to_play>0 then
+    fn(notes_to_play)
   end
 end
 
 function Rings:draw()
   screen.level(15)
+  local x_center=64
+  local y_center=32
+  local ring_centers={}
+  for i=1,self.num do
+    ring_centers[i]={64,32}
+    -- TODO: if LFO on
+    if self.pan[i].active then
+      ring_centers[i][1]=ring_centers[i][1]+util.linlin(-1,1,-63,63,self.pan[i].val)
+    end
+    if self.amp[i].active then
+      ring_centers[i][2]=ring_centers[i][2]+util.linlin(0,1,-31,31,self.amp[i].val)
+    end
+  end
   -- draw the rings
   for i=1,self.num do
-    screen.circle(64,32,self.radii[i])
+    screen.circle(ring_centers[i][1],ring_centers[i][2],self.radii[i])
     screen.stroke()
   end
+
   -- draw the notes around each ring
   for i,o in ipairs(self.orbit) do
     -- translate to the center of the screen
-    local x=o.x+64
-    local y=o.y+32
+    local x=o.x+ring_centers[o.id_ring][1]
+    local y=o.y+ring_centers[o.id_ring][2]
     screen.circle(x,y,2)
     screen.fill()
     if o.active then

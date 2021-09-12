@@ -221,3 +221,11 @@ random lfos for pan/volume. like oooooo, there could be an option to randomly tr
 the callback needs to give more information. the callback should give a list of the notes and their rings. that way each ring could have its own instrument (useful for drums).
 
 note-per-second parameter. to prevent streams of notes, there can be a random filter that prevents notes from playing. this can be set as "notes-per-second" which raises/lowers the probability of emitting a note depending on how many notes were previously emitted.
+
+## callback
+
+just going to do some mild refactoring here. instead of just sending the note name through the callback, I'm going to send the whole list of orbits, with all there data. then the main program and have the logic for determining how to play the notes.
+
+## random lfos
+
+I added in optional random lfos for amp/pan. similar to ooooo. each can be toggled on a per-ring basis. all notes on a ring share the same pan/amp. this was pretty easy coding, just a little bookkeeping.
