@@ -131,6 +131,10 @@ end
 function redraw()
   screen.clear()
 
+  -- show the current bpm
+  screen.move(1,1)
+  screen.text(string.format("bpm: %2.1f",16/ringset[1].period_lcm*60))
+
   -- draw the current ring set
   ringset[1]:draw()
 
