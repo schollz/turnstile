@@ -7,9 +7,9 @@ function Rings:new(o)
   self.__index=self
 
   -- define defaults if they are not defined
-  o.num=o.num or 3
-  o.radii=o.radii or {10,15,20}
-  o.periods=o.periods or {2,2.5,5}
+  o.num=o.num or 4
+  o.radii=o.radii or {10,16,22,28}
+  o.periods=o.periods or {1.5,3,2,6}
   -- run some generic initialization
   -- (useful to breakout to restart)
   o:init()
@@ -19,7 +19,7 @@ end
 function Rings:init()
   -- do initialize here
   self.playing=false
-  self.period_lcm=lcm(self.periods[1],self.periods[2],self.periods[3])
+  self.period_lcm=lcm(self.periods[1],self.periods[2],self.periods[3],self.periods[4])
   self.orbit={}
 end
 
@@ -41,6 +41,7 @@ function Rings:update(fn)
   if self.playing then
     time=current_time()-global_time_start
   end
+  local notes_to_play={}
   for i,o in ipairs(self.orbit) do
     local j=o.id_ring
     local x_old=self.orbit[i].x
@@ -53,8 +54,13 @@ function Rings:update(fn)
     if self.playing and fn~=nil then
       if x_old==nil or (x_old<=0 and self.orbit[i].x>=0) then
         -- crossed over the emitter
-        fn(self.orbit[i].note)
+        table.insert(notes_to_play,self.orbit[i].note)
       end
+    end
+  end
+  if (#notes_to_play==1 and math.random()<0.2) or #notes_to_play==4 then
+    for _, note in ipairs(notes_to_play) do
+        fn(note,#notes_to_play==self.num)
     end
   end
 end
@@ -62,7 +68,7 @@ end
 function Rings:draw()
   screen.level(15)
   -- draw the rings
-  for i=1,3 do
+  for i=1,self.num do
     screen.circle(64,32,self.radii[i])
     screen.stroke()
   end
@@ -79,7 +85,7 @@ end
 -- set_period will set the period and calculate the new lcm
 function Rings:set_period(i,x)
   self.periods[i]=x
-  self.period_lcm=lcm(self.periods[1],self.periods[2],self.periods[3])
+  self.period_lcm=lcm(self.periods[1],self.periods[2],self.periods[3],self.periods[4])
 end
 
 -- note_add adds a note to a ring

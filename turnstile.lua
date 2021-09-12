@@ -27,21 +27,25 @@ function init()
   ringset={}
   table.insert(ringset,Rings:new())
   -- add a C-major chord
-  ringset[1]:note_add(1,0,36)
-  ringset[1]:note_add(2,0,40)
+  ringset[1]:note_add(2,0,36)
+  ringset[1]:note_add(1,0,40)
   ringset[1]:note_add(3,0,43)
+  ringset[1]:note_add(4,0,43+12)
   -- -- add a Em/B
-  ringset[1]:note_add(1,pi/2,35)
-  ringset[1]:note_add(2,pi/2,40)
+  ringset[1]:note_add(2,pi/2,35)
+  ringset[1]:note_add(1,pi/2,40)
   ringset[1]:note_add(3,pi/2,43)
+  ringset[1]:note_add(4,pi/2,43+12)
   -- add a Am/C
-  ringset[1]:note_add(1,pi,36)
-  ringset[1]:note_add(2,pi,40)
+  ringset[1]:note_add(2,pi,36)
+  ringset[1]:note_add(1,pi,40)
   ringset[1]:note_add(3,pi,45)
-  -- -- -- add a F/C
-  -- ringset[1]:note_add(1,3*pi/2,36)
-  -- ringset[1]:note_add(2,3*pi/2,41)
-  -- ringset[1]:note_add(3,3*pi/2,45)
+  ringset[1]:note_add(4,pi,45+12)
+  -- -- add a F/C
+  ringset[1]:note_add(1,3*pi/2,36)
+  ringset[1]:note_add(2,3*pi/2,41)
+  ringset[1]:note_add(3,3*pi/2,45)
+  ringset[1]:note_add(4,3*pi/2,41+12)
 
   -- initialize metro for updating screen
   timer=metro.init()
@@ -54,8 +58,13 @@ end
 function updater()
   -- update each ring set
   for i,r in ipairs(ringset) do
-    r:update(function(note)
-      skeys:on({name="ghost piano",midi=note,velocity=120,sustain=0,decay=2})
+    r:update(function(note,is_chord)
+      if not is_chord then
+        skeys:on({name="steinway model b",midi=note+24,velocity=math.random(40,120),sustain=0,decay=5,delay_send=0.05,amp=0.6})
+      else
+        -- TODO: decay should be the total lcm plus a little
+        skeys:on({name="string spurs swells",midi=note,velocity=70,attack=2,sustain=0,decay=8,amp=0.7,reverb_send=0.01})
+      end
     end)
   end
   redraw()
