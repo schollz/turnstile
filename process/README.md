@@ -195,6 +195,17 @@ simple as that. no other math needed because I made the `period_fraction` in rad
 to switch chords I need to make sure that the phase alignment happens and changes by pi/2 radians each time. I calculated that this means each period should be changed by 1/4 * the LCM period. once [thats done](https://github.com/schollz/turnstile/commit/a0b4a6ea7f9a068ee126e86fac6bb50a2b46a301) it should work! 
 
 
-![image](https://raw.githubusercontent.com/schollz/turnstile/main/process/3chords.mp4)
+https://user-images.githubusercontent.com/6550035/132969136-843510df-ce19-4cb0-b4bd-41276e6e8413.mp4
+
 
 and it does!
+
+and it kinda doesn't sound great. it sounds a little bland to me....hm.
+
+## making it sound better
+
+I think what I wasn't liking was that there was too much going on. I decided to distinguish between *chords* and *melody*. a *chord* is anything with the max notes. a *melody* is anything crossing the barrier as just one note. I made sure that the chords will always emit, and that the melody only emits at a certain random frequency (adjustable). I think its sounding better now. I also added a fourth ring, to fill out the chords more. that gives a better distinction between chords and melody. this is all by feel, now. I didn't like how it felt to me before and now I like it better. but there's no rhyme or reason why I just did these particular changes (4 rings instead of 3, melodies vs chords).
+
+
+
+https://user-images.githubusercontent.com/6550035/132969136-843510df-ce19-4cb0-b4bd-41276e6e8413.mp4
