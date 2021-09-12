@@ -23,6 +23,9 @@ skeys=mxsamples:new()
 function init()
   global_time_start=current_time()
 
+  -- setup parameters
+  params:add_control("global rate","turnstile_global_rate",controlspec.new(0,10,'lin',0.1,1.0,'x',0.1/10))
+
   -- create a list of all the known ring sets
   ringset={}
   table.insert(ringset,Rings:new())

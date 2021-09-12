@@ -229,3 +229,15 @@ just going to do some mild refactoring here. instead of just sending the note na
 ## random lfos
 
 I added in optional random lfos for amp/pan. similar to ooooo. each can be toggled on a per-ring basis. all notes on a ring share the same pan/amp. this was pretty easy coding, just a little bookkeeping: https://github.com/schollz/turnstile/commit/6dbf73c
+
+## global rate control
+
+I'm going to add my first parameter to turnstile here. params are easy to add. we can just simply write:
+
+```lua
+-- parameter that goes from 0-10 in increments of 0.1
+params:add_control("<name>","<id>",controlspec.new(0,10,'lin',0.1,1.0,'x',0.1/10))
+```
+
+to add in a parameter. the parameter also needs to tell all the rings to update once it runs. this is a little more complicated. basically I think what I'll do here is have each `Rings` object check if the global rate has changed from its own internal notion, and if it has, then it will recalculate everything. I don't want to be recalculating this constantly (premature optimization here probably). but I think this will also make it easier to do "fading" in the future.
+
