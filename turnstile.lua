@@ -49,6 +49,7 @@ function init()
   ringset[1]:note_add(2,3*pi/2,41)
   ringset[1]:note_add(3,3*pi/2,45)
   ringset[1]:note_add(4,3*pi/2,41+12)
+  ringset[1].notes_per_second={}
 
   -- initialize metro for updating screen
   timer=metro.init()
@@ -60,13 +61,37 @@ end
 
 function updater()
   -- update each ring set
+  local ct=current_time()
   for i,r in ipairs(ringset) do
+    -- clear the current notes per second
+    local new_notes_per_second={}
+    for i,t in ipairs(r.notes_per_second) do
+      if ct-t>0 and ct-t<10 then
+        -- keep it
+        table.insert(new_notes_per_second,t)
+      end
+    end
+    -- update the notes
+    ringset[i].notes_per_second=new_notes_per_second
+    -- determine the actual number
+    local notes_per_second=#ringset[i].notes_per_second/10
+
     r:update(function(orbits)
       if #orbits==1 then
-        if math.random()<0.3 and orbits[1].id_ring<3 then
-          skeys:on({name="drums violin",midi=orbits[1].note,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
-        elseif math.random()<0.5 then
-          skeys:on({name="epiano r3",midi=orbits[1].note+24,pan=orbits[1].pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
+        if orbits[1].id_ring<3 then
+          local nps_target=1
+          local threshold=util.clamp(util.linlin(-2,2,0.05,0.95,nps_target-notes_per_second),0.05,0.95)
+          if math.random()<threshold then
+            skeys:on({name="drums violin",midi=orbits[1].note,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
+            table.insert(ringset[i].notes_per_second,ct)
+          end
+        else
+          local nps_target=4
+          local threshold=util.clamp(util.linlin(-2,2,0.05,0.95,nps_target-notes_per_second),0.05,0.95)
+          if math.random()<threshold then
+            skeys:on({name="epiano r3",midi=orbits[1].note+24,pan=orbits[1].pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
+            table.insert(ringset[i].notes_per_second,ct)
+          end
         end
       elseif #orbits==4 then
         for _,o in ipairs(orbits) do

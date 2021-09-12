@@ -214,13 +214,11 @@ and thats a good stopping point for day 1.
 
 # day 2 - ideas
 
-a global rate control. this might be fun to edit on the fly. global rate control should be *multiplied* by the inverse period (the rate), so it changes all the rings simultaneously. there probably needs to be a fade that allows it to fade between the new positions.
-
-random lfos for pan/volume. like oooooo, there could be an option to randomly translate the rings and have their x position correspond to pan and the y position correspond to volume.
-
-the callback needs to give more information. the callback should give a list of the notes and their rings. that way each ring could have its own instrument (useful for drums).
-
-note-per-second parameter. to prevent streams of notes, there can be a random filter that prevents notes from playing. this can be set as "notes-per-second" which raises/lowers the probability of emitting a note depending on how many notes were previously emitted.
+- a global rate control. this might be fun to edit on the fly. global rate control should be *multiplied* by the inverse period (the rate), so it changes all the rings simultaneously. there probably needs to be a fade that allows it to fade between the new positions.
+- random lfos for pan/volume. like oooooo, there could be an option to randomly translate the rings and have their x position correspond to pan and the y position correspond to volume.
+- the callback needs to give more information. the callback should give a list of the notes and their rings. that way each ring could have its own instrument (useful for drums).
+- note-per-second parameter. to prevent streams of notes, there can be a random filter that prevents notes from playing. this can be set as "notes-per-second" which raises/lowers the probability of emitting a note depending on how many notes were previously emitted.
+- show approximate bpm
 
 ## callback
 
@@ -241,3 +239,14 @@ params:add_control("<name>","<id>",controlspec.new(0,10,'lin',0.1,1.0,'x',0.1/10
 
 to add in a parameter. the parameter also needs to tell all the rings to update once it runs. this is a little more complicated. basically I think what I'll do here is have each `Rings` object check if the global rate has changed from its own internal notion, and if it has, then it will recalculate everything. I don't want to be recalculating this constantly (premature optimization here probably). but I think this will also make it easier to do "fading" in the future.
 
+I'm away from the norns now, so we'll see if this works: https://github.com/schollz/turnstile/commit/9cfe49f
+
+## showing the "bpm"
+
+the bpm is going to based off the lcm period. I'll just say arbitrarily that one full lcm period is one full measure at 4/4 time - so 16 beats. so the bpm is simply `16/period_lcm*60`. I figure this info would be useful on the display to get an idea for how to play with it. it should be pretty easy to get fractional bpm with turnstile since its all time based and not actually based in beats, but I'll just show the bpm to the nearest tenth using `string.format("%2.1f",calculated_bpm)`.
+
+change: https://github.com/schollz/turnstile/commit/d5b7f53
+
+## notes per second
+
+this one is little complicated. to figure out how to restrain the notes per second I first have to calculate the notes per second. to calculate the notes per second I need to have an array of the recent notes and their timestamp, and clear them when the time exceeds one second. then the number of items in the array is the current notes per second.
