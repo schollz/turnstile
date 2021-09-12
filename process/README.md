@@ -228,4 +228,4 @@ just going to do some mild refactoring here. instead of just sending the note na
 
 ## random lfos
 
-I added in optional random lfos for amp/pan. similar to ooooo. each can be toggled on a per-ring basis. all notes on a ring share the same pan/amp. this was pretty easy coding, just a little bookkeeping.
+I added in optional random lfos for amp/pan. similar to ooooo. each can be toggled on a per-ring basis. all notes on a ring share the same pan/amp. this was pretty easy coding, just a little bookkeeping: https://github.com/schollz/turnstile/commit/6dbf73c
