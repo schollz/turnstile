@@ -195,7 +195,7 @@ simple as that. no other math needed because I made the `period_fraction` in rad
 to switch chords I need to make sure that the phase alignment happens and changes by pi/2 radians each time. I calculated that this means each period should be changed by 1/4 * the LCM period. once [thats done](https://github.com/schollz/turnstile/commit/a0b4a6ea7f9a068ee126e86fac6bb50a2b46a301) it should work! 
 
 
-https://user-images.githubusercontent.com/6550035/132969136-843510df-ce19-4cb0-b4bd-41276e6e8413.mp4
+https://user-images.githubusercontent.com/6550035/132969137-3a7c43fd-0dfd-4a1d-8332-3c19abd7858a.mp4
 
 
 and it does!
@@ -208,6 +208,6 @@ I think what I wasn't liking was that there was too much going on. I decided to 
 
 
 
-https://user-images.githubusercontent.com/6550035/132969137-3a7c43fd-0dfd-4a1d-8332-3c19abd7858a.mp4
+https://user-images.githubusercontent.com/6550035/132969136-843510df-ce19-4cb0-b4bd-41276e6e8413.mp4
 
 and thats a good stopping point for day 1.
