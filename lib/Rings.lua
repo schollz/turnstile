@@ -9,7 +9,7 @@ function Rings:new(o)
   -- define defaults if they are not defined
   o.num=o.num or 3
   o.radii=o.radii or {10,15,20}
-  o.periods=o.periods or {1,2,3}
+  o.periods=o.periods or {2,2.5,5}
   -- run some generic initialization
   -- (useful to breakout to restart)
   o:init()
@@ -19,7 +19,7 @@ end
 function Rings:init()
   -- do initialize here
   self.playing=false
-  self.period_sync=lcm(self.periods[1],self.periods[2],self.periods[3])
+  self.period_lcm=lcm(self.periods[1],self.periods[2],self.periods[3])
   self.orbit={}
 end
 
@@ -44,8 +44,12 @@ function Rings:update(fn)
   for i,o in ipairs(self.orbit) do
     local j=o.id_ring
     local x_old=self.orbit[i].x
-    self.orbit[i].x=self.radii[j] * math.sin(2*3.14159/self.periods[j]*time)
-    self.orbit[i].y=self.radii[j] * -1 * math.cos(2*3.14159/self.periods[j]*time)
+    local rate=(1/self.periods[j])
+    local lcmrate=(1/self.period_lcm/4)
+    rate = rate - lcmrate
+    local period = 1/rate
+    self.orbit[i].x=self.radii[j] * math.sin(2*pi/period*time + o.period_fraction)
+    self.orbit[i].y=self.radii[j] * -1 * math.cos(2*pi/period*time + o.period_fraction)
     if self.playing and fn~=nil then
       if x_old==nil or (x_old<=0 and self.orbit[i].x>=0) then
         -- crossed over the emitter
@@ -75,7 +79,7 @@ end
 -- set_period will set the period and calculate the new lcm
 function Rings:set_period(i,x)
   self.periods[i]=x
-  self.period_sync=lcm(self.periods[1],self.periods[2],self.periods[3])
+  self.period_lcm=lcm(self.periods[1],self.periods[2],self.periods[3])
 end
 
 -- note_add adds a note to a ring
@@ -84,7 +88,7 @@ end
 -- note is a midi note
 function Rings:note_add(id_ring,period_fraction,note)
   -- make sure the period fraction is [0,2pi]
-  period_fraction=math.fmod(period_fraction,2*3.14159265)
+  period_fraction=math.fmod(period_fraction,2*pi)
 
   -- if note exists do nothing
   if self:note_exists(id_ring,period_fraction,note)~=nil then
@@ -93,6 +97,7 @@ function Rings:note_add(id_ring,period_fraction,note)
 
   -- otherwise add it to the orbit
   table.insert(self.orbit,{id_ring=id_ring,period_fraction=period_fraction,note=note})
+  self:update()
 end
 
 -- note_del deletes a note

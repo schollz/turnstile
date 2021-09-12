@@ -14,6 +14,7 @@ include("turnstile/lib/utils")
 local Rings=include("turnstile/lib/Rings")
 local shift=false
 local is_playing
+pi=3.14159265358979
 
 mxsamples=include("mx.samples/lib/mx.samples")
 engine.name="MxSamples"
@@ -29,6 +30,18 @@ function init()
   ringset[1]:note_add(1,0,36)
   ringset[1]:note_add(2,0,40)
   ringset[1]:note_add(3,0,43)
+  -- -- add a Em/B
+  ringset[1]:note_add(1,pi/2,35)
+  ringset[1]:note_add(2,pi/2,40)
+  ringset[1]:note_add(3,pi/2,43)
+  -- add a Am/C
+  ringset[1]:note_add(1,pi,36)
+  ringset[1]:note_add(2,pi,40)
+  ringset[1]:note_add(3,pi,45)
+  -- -- -- add a F/C
+  -- ringset[1]:note_add(1,3*pi/2,36)
+  -- ringset[1]:note_add(2,3*pi/2,41)
+  -- ringset[1]:note_add(3,3*pi/2,45)
 
   -- initialize metro for updating screen
   timer=metro.init()
