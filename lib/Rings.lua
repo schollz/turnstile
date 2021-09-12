@@ -51,10 +51,12 @@ function Rings:update(fn)
     local period=1/rate
     self.orbit[i].x=self.radii[j]*math.sin(2*pi/period*time+o.period_fraction)
     self.orbit[i].y=self.radii[j]*-1*math.cos(2*pi/period*time+o.period_fraction)
+    self.orbit[i].active=false
     if self.playing and fn~=nil then
       if x_old==nil or (x_old<=0 and self.orbit[i].x>=0) then
         -- crossed over the emitter
         table.insert(notes_to_play,self.orbit[i].note)
+        self.orbit[i].active=true
       end
     end
   end
@@ -79,6 +81,10 @@ function Rings:draw()
     local y=o.y+32
     screen.circle(x,y,2)
     screen.fill()
+    if o.active then
+      screen.circle(x,y,4)
+      screen.stroke()
+    end
   end
 end
 
