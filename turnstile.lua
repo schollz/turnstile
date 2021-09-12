@@ -24,7 +24,7 @@ function init()
   global_time_start=current_time()
 
   -- setup parameters
-  params:add_control("global rate","turnstile_global_rate",controlspec.new(0,10,'lin',0.1,1.0,'x',0.1/10))
+  params:add_control("turnstile_global_rate","global rate",controlspec.new(0.25,10,'lin',0.25,1.0,'x',0.25/10))
 
   -- create a list of all the known ring sets
   ringset={}
@@ -75,23 +75,14 @@ function updater()
     ringset[i].notes_per_second=new_notes_per_second
     -- determine the actual number
     local notes_per_second=#ringset[i].notes_per_second/10
-
+    local nps_target=util.linlin(-1,1,0,10,math.sin(2*pi/30*ct))
+    print(nps_target,notes_per_second)
     r:update(function(orbits)
       if #orbits==1 then
-        if orbits[1].id_ring<3 then
-          local nps_target=1
-          local threshold=util.clamp(util.linlin(-2,2,0.05,0.95,nps_target-notes_per_second),0.05,0.95)
-          if math.random()<threshold then
-            skeys:on({name="drums violin",midi=orbits[1].note,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
-            table.insert(ringset[i].notes_per_second,ct)
-          end
-        else
-          local nps_target=4
-          local threshold=util.clamp(util.linlin(-2,2,0.05,0.95,nps_target-notes_per_second),0.05,0.95)
-          if math.random()<threshold then
-            skeys:on({name="epiano r3",midi=orbits[1].note+24,pan=orbits[1].pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
-            table.insert(ringset[i].notes_per_second,ct)
-          end
+        local threshold=util.clamp(util.linlin(-2,2,0.05,0.95,nps_target-notes_per_second),0.05,0.95)
+        if math.random()<threshold then
+          skeys:on({name="epiano r3",midi=orbits[1].note+24,pan=orbits[1].pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
+          table.insert(ringset[i].notes_per_second,ct)
         end
       elseif #orbits==4 then
         for _,o in ipairs(orbits) do
@@ -156,12 +147,12 @@ end
 function redraw()
   screen.clear()
 
-  -- show the current bpm
-  screen.move(1,1)
-  screen.text(string.format("bpm: %2.1f",16/ringset[1].period_lcm*60))
-
   -- draw the current ring set
   ringset[1]:draw()
+
+  -- show the current bpm
+  screen.move(1,8)
+  screen.text(string.format("bpm: %2.1f",16/ringset[1].period_lcm*60))
 
   screen.update()
 end
