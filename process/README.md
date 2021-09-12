@@ -115,7 +115,7 @@ whoops! the `note_exists` returns a *number* not *nil* when the note exists. tha
 #### bug 2
 
 
-![image](https://raw.githubusercontent.com/schollz/turnstile/main/process/aligned-01.jpg)
+![image](https://raw.githubusercontent.com/schollz/turnstile/main/process/firstdots.jpg)
 
 
 okay! I can see dots now! but they are on the bottom. I want the top to be the "start" position (this is arbitrary but it makes sense to me). this is just a change [of a minus sign](https://github.com/schollz/turnstile/commit/2ddfc8a9f020b58383be0c562e61e47d41b39f06).
