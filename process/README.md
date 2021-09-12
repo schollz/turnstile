@@ -94,7 +94,7 @@ this set of rings gets updated in the draw-routine which updates at 15 fps. that
 so I just ssh-ed in my norns and cloned my code repository. now I'm going to open maiden so I will see all the errors that happen when I try running the code. I am going to edit the code using my desktop computer which mounted the norns drive with [SFTP Drive](https://www.nsoftware.com/sftp/drive/download.aspx).
 
 
-#### bug 1
+#### bug 1 - bad logic
 
 holy crap, I ran the code and there are no errors! ...but its clearly not showing any dots for the notes. and nothing is moving. and oh yeah, as I'm typing this I know why. I never did "start" it! so I have to code up the start, attaching it to K3.
 
@@ -112,7 +112,7 @@ end
 
 whoops! the `note_exists` returns a *number* not *nil* when the note exists. thanks to my comment this was pretty easy to see. so I just need to [change this to `~=nil`](https://github.com/schollz/turnstile/commit/9be2290fa5a9366fb8b1562b81291b0d678d105a).
 
-#### bug 2
+#### bug 2 - wrong sign in math
 
 
 ![image](https://raw.githubusercontent.com/schollz/turnstile/main/process/firstdots.jpg)
@@ -120,7 +120,7 @@ whoops! the `note_exists` returns a *number* not *nil* when the note exists. tha
 
 okay! I can see dots now! but they are on the bottom. I want the top to be the "start" position (this is arbitrary but it makes sense to me). this is just a change [of a minus sign](https://github.com/schollz/turnstile/commit/2ddfc8a9f020b58383be0c562e61e47d41b39f06).
 
-#### bug 3
+#### bug 3 - start position is wrong
 
 THE DOTS MOVE!!!! AND they align every 6 seconds, just like I calculated they would from the lcm (of periods of 1, 2, and 3 seconds). 
 
@@ -128,3 +128,73 @@ THE DOTS MOVE!!!! AND they align every 6 seconds, just like I calculated they wo
 
 
 another bug though, as when I start they start from some weird time. I realized I need to reset the global time counter when start is pressed. also I need to fix the start button so it actually stops too. time to move the whole routine into [its own little function](https://github.com/schollz/turnstile/commit/28ffab706574a1e0c3769868a21f13bdab5bfb28) because its big enough now.
+
+
+## lets listen
+
+my next favorite part, adding sounds in for the first time. lets go ahead and do it, even though some of the important chord pieces aren't in place. 
+
+I'm going to use the `mx.samples` engine for this. adding it needs just a few lines to initialize:
+
+```
+mxsamples=include("mx.samples/lib/mx.samples")
+engine.name="MxSamples"
+skeys=mxsamples:new()
+```
+
+and then defining the callback when a note is emitted:
+
+```
+r:update(function(note)
+  skeys:on({name="ghost piano",midi=note,velocity=120})
+end)
+```
+
+[a small change](https://github.com/schollz/turnstile/commit/c6f88ca), but it immediately gives some audio!
+
+
+## adding more chords
+
+right now I don't have buttons to press to add notes, and it would take awhile to add them so I went ahead and just typed out chords manually.
+
+```lua
+-- add a C-major chord
+ringset[1]:note_add(1,0,36)
+ringset[1]:note_add(2,0,40)
+ringset[1]:note_add(3,0,43)
+-- add a Em/B
+ringset[1]:note_add(1,pi/2,35)
+ringset[1]:note_add(2,pi/2,40)
+ringset[1]:note_add(3,pi/2,43)
+-- add a Am/C
+ringset[1]:note_add(1,pi,36)
+ringset[1]:note_add(2,pi,40)
+ringset[1]:note_add(3,pi,45)
+```
+
+problem though - when I start the program I don't see the notes laid out anywhere. time for another bug.
+
+#### bug 4 - forgetting the phase
+
+to make sure the notes start in different places they should have a different phase. I totally forgot to add phase into the calculation for the position. in `Rings.lua`, the following
+
+```lua
+self.orbit[i].x=self.radii[j] * math.sin(2*pi/self.periods[j]*time)
+self.orbit[i].y=self.radii[j] * -1 * math.cos(2*pi/self.periods[j]*time)
+```
+
+should actually be
+
+```lua
+self.orbit[i].x=self.radii[j] * math.sin(2*pi/self.periods[j]*time + o.period_fraction)
+self.orbit[i].y=self.radii[j] * -1 * math.cos(2*pi/self.periods[j]*time + o.period_fraction)
+```
+
+simple as that. no other math needed because I made the `period_fraction` in radians.
+
+to switch chords I need to make sure that the phase alignment happens and changes by pi/2 radians each time. I calculated that this means each period should be changed by 1/4 * the LCM period. once [thats done](https://github.com/schollz/turnstile/commit/a0b4a6ea7f9a068ee126e86fac6bb50a2b46a301) it should work! 
+
+
+![image](https://raw.githubusercontent.com/schollz/turnstile/main/process/3chords.mp4)
+
+and it does!
