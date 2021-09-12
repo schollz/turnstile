@@ -89,3 +89,42 @@ this set of rings gets updated in the draw-routine which updates at 15 fps. that
 **this will be the first time I'm running the program on norns now.** if it all works I will see some rings! but its 95% chance its not going to work and there will be bugs. there are always bugs. so here we go on the first bug excursions.
 
 ### bug excursion 1 - first time running on norns
+
+
+so I just ssh-ed in my norns and cloned my code repository. now I'm going to open maiden so I will see all the errors that happen when I try running the code. I am going to edit the code using my desktop computer which mounted the norns drive with [SFTP Drive](https://www.nsoftware.com/sftp/drive/download.aspx).
+
+
+#### bug 1
+
+holy crap, I ran the code and there are no errors! ...but its clearly not showing any dots for the notes. and nothing is moving. and oh yeah, as I'm typing this I know why. I never did "start" it! so I have to code up the start, attaching it to K3.
+
+
+![image](https://raw.githubusercontent.com/schollz/turnstile/main/process/first.jpg)
+
+but that's not actually the whole problem. there should be some dots shown for the three notes. after a quick look through the code I found a bug:
+
+```
+-- if note exists do nothing
+if self:note_exists(id_ring,period_fraction,note)==nil then
+	do return end
+end
+```
+
+whoops! the `note_exists` returns a *number* not *nil* when the note exists. thanks to my comment this was pretty easy to see. so I just need to [change this to `~=nil`](https://github.com/schollz/turnstile/commit/9be2290fa5a9366fb8b1562b81291b0d678d105a).
+
+#### bug 2
+
+
+![image](https://raw.githubusercontent.com/schollz/turnstile/main/process/aligned-01.jpg)
+
+
+okay! I can see dots now! but they are on the bottom. I want the top to be the "start" position (this is arbitrary but it makes sense to me). this is just a change [of a minus sign](https://github.com/schollz/turnstile/commit/2ddfc8a9f020b58383be0c562e61e47d41b39f06).
+
+#### bug 3
+
+THE DOTS MOVE!!!! AND they align every 6 seconds, just like I calculated they would from the lcm (of periods of 1, 2, and 3 seconds). 
+
+![image](https://raw.githubusercontent.com/schollz/turnstile/main/process/firstspin.gif)
+
+
+another bug though, as when I start they start from some weird time. I realized I need to reset the global time counter when start is pressed. also I need to fix the start button so it actually stops too. time to move the whole routine into [its own little function](https://github.com/schollz/turnstile/commit/28ffab706574a1e0c3769868a21f13bdab5bfb28) because its big enough now.
