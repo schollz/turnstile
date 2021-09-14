@@ -259,8 +259,14 @@ I'm realizing its hard to deal with non-integers when calculating LCMs. so I'm i
 
 this change is reflected in https://github.com/schollz/turnstile/commit/f2c6ec2
 
+this makes the "global rate" adjuster parameter we just made on day 2 obsolte already. oh well.
+
 ## corrections to notes per second
 
 instead of notes per second, I think it might be more interesting to emit melody notes from rings only when they occur in a specific order. say ring 1,2,3,4,1,2,3,4,... so that a note only emits when it comes after a specific ring. 
 
 this change is reflected in https://github.com/schollz/turnstile/commit/c7fcc66
+
+## what is turnstile?
+
+as I'm making this thing I'm sort re-figuring out what it is. my initial thought was to allow you to record any notes and it will play them through the turnstile. now it seems to be a pretty interesting chord sequencer with radian-related timings. I think I might just keep it like that and make it so you only edit the chords. it might be interesting to edit the chords in numerals, i.e. specfiying I iv ii IV or something.

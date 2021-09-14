@@ -1,3 +1,7 @@
+-- define a global pi, every digit I can remember
+pi=3.1415926535897923846262643383279502
+
+-- lcm of any number of integers
 function lcm(...)
   local function lcm_(x,y)
     local lcm_num=0

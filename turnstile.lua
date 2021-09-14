@@ -1,7 +1,7 @@
 -- new script v0.0.1
 -- ?
 --
--- llllllll.co/t/?
+-- llllllll.co/t/turnstile
 --
 --
 --
@@ -14,7 +14,6 @@ include("turnstile/lib/utils")
 local Rings=include("turnstile/lib/Rings")
 local shift=false
 local is_playing
-pi=3.14159265358979
 
 mxsamples=include("mx.samples/lib/mx.samples")
 engine.name="MxSamples"
