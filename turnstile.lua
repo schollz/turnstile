@@ -52,10 +52,23 @@ function init()
 
   -- initialize metro for updating screen
   timer=metro.init()
-  timer.time=1/15
+  timer.time=1/30
   timer.count=-1
   timer.event=updater
   timer:start()
+  timer2=metro.init()
+  timer2.time=1/15
+  timer2.count=-1
+  timer2.event=redrawer
+  timer2:start()
+  
+
+  ring_play=1
+
+end
+
+function redrawer()
+  redraw()
 end
 
 function updater()
@@ -78,19 +91,18 @@ function updater()
     print(nps_target,notes_per_second)
     local ring_last=1
     r:update(function(orbits)
-      if #orbits==1 then
-        local threshold=util.clamp(util.linlin(-2,2,0.05,0.95,nps_target-notes_per_second),0.05,0.95)
-        local ring=orbits[1].id_ring
-        if ring-ring_last==1 or ring-ring_last==-3 then
-          --if math.random()<threshold then
-          skeys:on({name="epiano r3",midi=orbits[1].note+24,pan=orbits[1].pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
-          table.insert(ringset[i].notes_per_second,ct)
-        end
-      elseif #orbits==4 then
+      if #orbits==4 then
         for _,o in ipairs(orbits) do
           -- decay should correspond to the tempo
-          local decay=clock.get_beat_sec()*4*1.5
+          local decay=clock.get_beat_sec()*8*1.5
           skeys:on({name="string spurs swells",midi=o.note,pan=o.pan,velocity=70,attack=2,sustain=0,decay=decay,amp=0.7,reverb_send=0.01})
+        end
+      else
+        for _,o in ipairs(orbits) do
+          if ring_play==o.id_ring then
+            skeys:on({name="ghost piano",midi=orbits[1].note+24,pan=orbits[1].pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=0.6})
+          end
+
         end
       end
     end)

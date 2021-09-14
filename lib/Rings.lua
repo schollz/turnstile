@@ -83,7 +83,7 @@ function Rings:update(fn)
     local period=1/rate
     -- slow down the period so that it matches up with the current bpm
     -- so that one full period_lcm = 16 beats
-    period=period*clock.get_beat_sec()*16/self.period_lcm
+    period=period*clock.get_beat_sec()*8/self.period_lcm
     self.orbit[i].x=self.radii[j]*math.sin(2*pi/period*time+o.period_fraction)
     self.orbit[i].y=self.radii[j]*-1*math.cos(2*pi/period*time+o.period_fraction)
     self.orbit[i].active=false
