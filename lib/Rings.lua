@@ -8,10 +8,8 @@ function Rings:new(o)
 
   -- define defaults if they are not defined
   o.num=o.num or 4
-  o.global_rate=1 or params:get("turnstile_global_rate")
   o.radii=o.radii or {10,16,22,28}
-  -- o.periods=o.periods or {1.5,3,2,6}
-  o.periods=o.periods or {4/5*2,2*4/3,2*4/2,2*4/6}
+  o.periods=o.periods or {1,2,3,4}
   o.pan={}
   for i=1,o.num do
     o.pan[i]={}
@@ -37,7 +35,7 @@ end
 function Rings:init()
   -- do initialize here
   self.playing=false
-  self.period_lcm=lcm(self.periods[1]/self.global_rate,self.periods[2]/self.global_rate,self.periods[3]/self.global_rate,self.periods[4]/self.global_rate)
+  self.period_lcm=lcm(self.periods[1],self.periods[2],self.periods[3],self.periods[4])
   self.orbit={}
 end
 
@@ -60,20 +58,6 @@ function Rings:update(fn)
     time=current_time()-global_time_start
   end
 
-  -- check if the global rate has changed
-  if params:get("turnstile_global_rate")~=self.global_rate then
-    -- -- fade in global rate
-    -- self.global_rate=self.global_rate+(params:get("turnstile_global_rate")-self.global_rate)/10
-    -- if math.abs(self.global_rate-params:get("turnstile_global_rate"))<0.2 then
-    --   self.global_rate=params:get("turnstile_global_rate")
-    -- end
-    -- update period lcm
-    self.global_rate=params:get("turnstile_global_rate")
-    print("determining lcm")
-    print(self.periods[1]/self.global_rate,self.periods[2]/self.global_rate,self.periods[3]/self.global_rate,self.periods[4]/self.global_rate)
-    self.period_lcm=lcm(self.periods[1]/self.global_rate,self.periods[2]/self.global_rate,self.periods[3]/self.global_rate,self.periods[4]/self.global_rate)
-    print("lcm= "..self.period_lcm)
-  end
   -- update ring pan/volume
   for i=1,self.num do
     if self.pan[i].active then
@@ -93,10 +77,13 @@ function Rings:update(fn)
   for i,o in ipairs(self.orbit) do
     local j=o.id_ring
     local x_old=self.orbit[i].x
-    local rate=(self.global_rate/self.periods[j])
+    local rate=(1/self.periods[j])
     local lcmrate=(1/self.period_lcm/4)
     rate=rate-lcmrate
     local period=1/rate
+    -- slow down the period so that it matches up with the current bpm
+    -- so that one full period_lcm = 16 beats
+    period=period*clock.get_beat_sec()*16/self.period_lcm
     self.orbit[i].x=self.radii[j]*math.sin(2*pi/period*time+o.period_fraction)
     self.orbit[i].y=self.radii[j]*-1*math.cos(2*pi/period*time+o.period_fraction)
     self.orbit[i].active=false
@@ -153,7 +140,7 @@ end
 -- set_period will set the period and calculate the new lcm
 function Rings:set_period(i,x)
   self.periods[i]=x
-  self.period_lcm=lcm(self.periods[1]/self.global_rate,self.periods[2]/self.global_rate,self.periods[3]/self.global_rate,self.periods[4]/self.global_rate)
+  self.period_lcm=lcm(self.periods[1],self.periods[2],self.periods[3],self.periods[4])
 end
 
 -- note_add adds a note to a ring
