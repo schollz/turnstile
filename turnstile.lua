@@ -100,7 +100,7 @@ function updater()
       else
         for _,o in ipairs(orbits) do
           if ring_play==o.id_ring then
-            skeys:on({name="ghost piano",midi=orbits[1].note+24,pan=orbits[1].pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=0.6})
+            skeys:on({name="ghost piano",midi=o.note+24,pan=o.pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=0.6})
           end
 
         end
