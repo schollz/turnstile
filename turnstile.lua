@@ -88,10 +88,10 @@ function updater()
     -- determine the actual number
     local notes_per_second=#ringset[i].notes_per_second/10
     local nps_target=util.linlin(-1,1,0,10,math.sin(2*pi/30*ct))
-    print(nps_target,notes_per_second)
     local ring_last=1
     r:update(function(orbits)
       if #orbits==4 then
+	print("chord: "..ct-global_time_start)
         for _,o in ipairs(orbits) do
           -- decay should correspond to the tempo
           local decay=clock.get_beat_sec()*8*1.5

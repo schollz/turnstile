@@ -9,7 +9,7 @@ function Rings:new(o)
   -- define defaults if they are not defined
   o.num=o.num or 4
   o.radii=o.radii or {10,16,22,28}
-  o.periods=o.periods or {1,2,3,4}
+  o.periods=o.periods or {2,4,4,2}
   o.pan={}
   for i=1,o.num do
     o.pan[i]={}
@@ -83,7 +83,8 @@ function Rings:update(fn)
     local period=1/rate
     -- slow down the period so that it matches up with the current bpm
     -- so that one full period_lcm = 16 beats
-    period=period*clock.get_beat_sec()*8/self.period_lcm
+    --period=period*clock.get_beat_sec()*8/self.period_lcm
+    period=period*params:get("turnstile_global_rate")
     self.orbit[i].x=self.radii[j]*math.sin(2*pi/period*time+o.period_fraction)
     self.orbit[i].y=self.radii[j]*-1*math.cos(2*pi/period*time+o.period_fraction)
     self.orbit[i].active=false
