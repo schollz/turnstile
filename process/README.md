@@ -250,3 +250,17 @@ change: https://github.com/schollz/turnstile/commit/d5b7f53
 ## notes per second
 
 this one is little complicated. to figure out how to restrain the notes per second I first have to calculate the notes per second. to calculate the notes per second I need to have an array of the recent notes and their timestamp, and clear them when the time exceeds one second. then the number of items in the array is the current notes per second.
+
+# day 3 
+
+## corrections to lcm
+
+I'm realizing its hard to deal with non-integers when calculating LCMs. so I'm instead going to clamp the ring periods to each be integers (maybe in range 1-10) and then scale the final periods according to the clock. so I can give say 16 beats to one full period of the LCM of all the rings, so that each chord occurs after 4 "beats". the actual period of all rings will be scaled by the difference in the calculated period lcm (from integers) and the prescribed clock.
+
+this change is reflected in https://github.com/schollz/turnstile/commit/f2c6ec2
+
+## corrections to notes per second
+
+instead of notes per second, I think it might be more interesting to emit melody notes from rings only when they occur in a specific order. say ring 1,2,3,4,1,2,3,4,... so that a note only emits when it comes after a specific ring. 
+
+this change is reflected in https://github.com/schollz/turnstile/commit/c7fcc66
