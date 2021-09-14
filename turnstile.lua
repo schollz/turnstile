@@ -77,17 +77,21 @@ function updater()
     local notes_per_second=#ringset[i].notes_per_second/10
     local nps_target=util.linlin(-1,1,0,10,math.sin(2*pi/30*ct))
     print(nps_target,notes_per_second)
+    local ring_last=1
     r:update(function(orbits)
       if #orbits==1 then
         local threshold=util.clamp(util.linlin(-2,2,0.05,0.95,nps_target-notes_per_second),0.05,0.95)
-        if math.random()<threshold then
+        local ring=orbits[1].id_ring
+        if ring-ring_last==1 or ring-ring_last==-3 then
+          --if math.random()<threshold then
           skeys:on({name="epiano r3",midi=orbits[1].note+24,pan=orbits[1].pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=1.0})
           table.insert(ringset[i].notes_per_second,ct)
         end
       elseif #orbits==4 then
         for _,o in ipairs(orbits) do
-          -- TODO: decay should be the total lcm plus a little
-          skeys:on({name="string spurs swells",midi=o.note,pan=o.pan,velocity=70,attack=2,sustain=0,decay=r.period_lcm*1.5,amp=0.7,reverb_send=0.01})
+          -- decay should correspond to the tempo
+          local decay=clock.get_beat_sec()*4*1.5
+          skeys:on({name="string spurs swells",midi=o.note,pan=o.pan,velocity=70,attack=2,sustain=0,decay=decay,amp=0.7,reverb_send=0.01})
         end
       end
     end)
