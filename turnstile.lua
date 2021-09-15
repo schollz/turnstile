@@ -65,6 +65,7 @@ function init()
 
   ring_play=1
   ring_play_count=0
+  ring_play_count_next=4
 end
 
 function redrawer()
@@ -97,14 +98,16 @@ function updater()
           local decay=clock.get_beat_sec()*8*1.5
           skeys:on({name="string spurs swells",midi=o.note,pan=o.pan,velocity=70,attack=2,sustain=0,decay=decay,amp=0.5,reverb_send=0.02})
         end
-      else
+end
+if true then
 	local rp=ring_play
         for _,o in ipairs(orbits) do
           if rp==o.id_ring then
             skeys:on({name="ghost piano",midi=o.note+24,pan=o.pan,velocity=math.random(60,120),sustain=0,decay=5,delay_send=0.00,amp=0.6})
-            if ring_play_count>math.random(3,8) then
+            if ring_play_count>ring_play_count_next then
               ring_play=math.random(1,4)
               ring_play_count=0
+	      ring_play_count_next=math.random(1,8)
             end
             ring_play_count=ring_play_count+1
           end

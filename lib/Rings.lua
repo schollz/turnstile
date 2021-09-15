@@ -9,7 +9,7 @@ function Rings:new(o)
   -- define defaults if they are not defined
   o.num=o.num or 4
   o.radii=o.radii or {10,16,22,28}
-  o.periods=o.periods or {2,4,1,2}
+  o.periods=o.periods or {2,4,1,3}
   o.pan={}
   for i=1,o.num do
     o.pan[i]={}
